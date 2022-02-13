@@ -13,6 +13,7 @@ defmodule Easing.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       consolidate_protocols: Mix.env() != :test,
       package: package(),
+      description: (),
       source_url: @scm_url,
       docs: docs(),
       deps: deps()
@@ -28,6 +29,8 @@ defmodule Easing.MixProject do
       extra_applications: [:logger]
     ]
   end
+
+  def description(), do: "Easing function calculations"
 
   defp package do
     [

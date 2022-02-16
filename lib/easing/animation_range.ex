@@ -44,12 +44,15 @@ defmodule Easing.AnimationRange do
   @doc """
   Returns the size of the `Easing.AnimationRange`
 
+  Sizes are *inclusive* across a range. So a range from `0` - `1` with a step of `0.1` will have
+  `11` values, not `10` because the `0` value is included in that result.
+
   ## Examples:
       iex> Easing.AnimationRange.calculate(1000, 60) |> Easing.AnimationRange.size()
-      60_000
+      60_001
   """
   def size(%{__struct__: __MODULE__, first: first, last: last, step: step}) do
-    abs(:erlang./(last - first, step)) |> Kernel.trunc()
+    (abs(:erlang./(last - first, step)) |> Kernel.trunc()) + 1
   end
 
 

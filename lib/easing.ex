@@ -23,10 +23,10 @@ defmodule Easing do
   ## Examples:
 
       iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1))
-      [0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 0.9999999999999997]
+      [0.0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 1.0]
 
       iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out})
-      [0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
+      [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
   """
   def to_list(%AnimationRange{} = animation_range, easing) do
     animation_range
@@ -34,7 +34,7 @@ defmodule Easing do
     |> Enum.to_list()
   end
 
-  @spec to_list(animation_range(), easing_function_or_tuple()) :: easings()
+  @spec stream(animation_range(), easing_function_or_tuple()) :: Enumerable.t()
   @doc """
   Generates a stream of animation frame values.
 
@@ -42,10 +42,10 @@ defmodule Easing do
 
   ## Examples:
       iex> Easing.stream(%Easing.AnimationRange{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1)) |> Enum.to_list()
-      [0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 0.9999999999999997]
+      [0.0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 1.0]
 
       iex> Easing.stream(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out}) |> Enum.to_list()
-      [0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
+      [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 
   """
   def stream(%AnimationRange{} = animation_range, easing_function) when is_function(easing_function) do
@@ -478,7 +478,7 @@ defmodule Easing do
   """
   def bounce_in_out(progress), do: run({:bounce, :in_out}, progress)
 
-  @spec run(easing_function(), float()) :: float()
+  @spec run(easing_function_or_tuple(), float()) :: float()
   @doc """
   Easing calculation. Take a tupal of atoms `{direction, type}` and the progress is a value
   between 0 - 1 that represents the animation progress. (0 = beginning, 1 = end)
@@ -491,8 +491,8 @@ defmodule Easing do
   """
   def run(easing_function, progress) do
     cond do
-      progress == 0 -> 0
-      progress == 1 -> 1
+      progress == 0 -> 0.0
+      progress == 1 -> 1.0
       true -> do_run(easing_function, progress)
     end
   end
@@ -675,7 +675,7 @@ defmodule Easing do
   # Bounce
 
   defp do_run({:bounce, :in}, progress) do
-    1 - run({:bounce, :out}, 1 - progress)
+    1.0 - run({:bounce, :out}, 1.0 - progress)
   end
 
   defp do_run({:bounce, :out}, progress) do

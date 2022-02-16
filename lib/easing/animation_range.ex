@@ -66,14 +66,14 @@ defmodule Easing.AnimationRange do
       {:suspended, acc, &reduce(first, last, &1, fun, step)}
     end
 
-    defp reduce(first, last, {:cont, acc}, fun, step)
-         when step > 0 and first <= last
-         when step < 0 and first >= last do
-      reduce(first + step, last, fun.(first, acc), fun, step)
-    end
-
-    defp reduce(_, _, {:cont, acc}, _fun, _up) do
-      {:done, acc}
+    defp reduce(first, last, {:cont, acc}, fun, step) do
+      cond do
+        Float.ceil(first + 0.0, 10) >= last ->
+          {_, acc} = fun.(last, acc)
+          {:done, acc}
+        true ->
+          reduce(first + step, last, fun.(first, acc), fun, step)
+      end
     end
 
     def member?(%{__struct__: Easing.AnimationRange, first: first, last: last, step: step} = range, value) do

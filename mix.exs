@@ -13,7 +13,7 @@ defmodule Easing.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       consolidate_protocols: Mix.env() != :test,
       package: package(),
-      description: (),
+      description: description(),
       source_url: @scm_url,
       docs: docs(),
       deps: deps()

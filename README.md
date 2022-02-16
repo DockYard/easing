@@ -55,10 +55,10 @@ iex> Easing.sine_in(0.4)
 However you likely want to calculate the list of values for a given animation. `Easing.to_list/2` will take a `Easing.AnimationRange` struct and the easing as either a function reference or a tuple.
 
 ```elixir
-iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 1, step: 0.1}, &Easing.bounce_in_out(&1))
-[0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
+iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, &Easing.bounce_in_out(&1))
+[0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out})
-[0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
+[0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 ```
 
 ### Calculating animation frames from a Stream
@@ -67,7 +67,7 @@ In many cases you will generate many animation frame values and it may be most p
 
 ```elixir
 iex> Easing.stream(%Easing.AnimationRange{first: 0, last: 1, step: 0.0001}, &Easing.sine_in/1) |> Enum.take(3)
-[0, 1.2337005528273437e-8, 4.9348021557982236e-8]
+[0.0, 1.2337005528273437e-8, 4.9348021557982236e-8]
 ```
 
 `Easing.stream/2` also take a `tuple` similar to `Easing.to_list/2`
@@ -88,7 +88,7 @@ end
 iex> Easing.to_list(Easing.AnimationRange.new(0, 1, 0.1), custom_easing)
 [0.0, 0.006155829702431115, 0.024471741852423234, 0.054496737905816106,
  0.09549150281252627, 0.8535533905932737, 0.7938926261462367,
- 0.7269952498697734, 0.6545084971874737, 0.5782172325201156, 0.5000000000000002]
+ 0.7269952498697734, 0.6545084971874737, 0.5782172325201156, 0.5]
 ```
 
 ### `Easing.AnimationRange`

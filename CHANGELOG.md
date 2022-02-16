@@ -1,5 +1,8 @@
 # Version History
 
+## 0.1.2
+* Changed `Easing.AnimationRange.size/1` to calculate an inclusive result
+
 ## 0.1.1
 
 * ensure all return values are Float

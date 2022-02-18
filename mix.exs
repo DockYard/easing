@@ -1,7 +1,7 @@
 defmodule Easing.MixProject do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.1.3"
   @scm_url "https://github.com/DockYard/easing"
 
   def project do

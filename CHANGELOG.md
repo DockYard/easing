@@ -1,5 +1,9 @@
 # Version History
 
+## 0.1.3
+
+Bug fix: corrected `Easing.AnimationRange.calculate/2` to properly segment based upon frames within the framerate over the given duration
+
 ## 0.1.2
 * Changed `Easing.AnimationRange.size/1` to calculate an inclusive result
 

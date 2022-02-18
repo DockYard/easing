@@ -7,6 +7,8 @@ defmodule Easing.AnimationRange do
   """
   defstruct first: nil, last: nil, step: nil
 
+  @one_second 1000
+
   @type animation_range :: %Easing.AnimationRange{first: number(), last: number(), step: number()}
 
   @spec new(number(), number(), number()) :: animation_range()
@@ -29,11 +31,11 @@ defmodule Easing.AnimationRange do
   * fps - target frames per second of the animation, only accepts `Integer`
 
   ## Examples:
-      iex> Easing.AnimationRange.calculate(100, 1)
-      %Easing.AnimationRange{first: 0, last: 1, step: 0.01}
+      iex> Easing.AnimationRange.calculate(1000, 1)
+      %Easing.AnimationRange{first: 0, last: 1, step: 1.0}
   """
   def calculate(duration_in_ms, fps) when is_integer(duration_in_ms) and is_integer(fps) do
-    %__MODULE__{first: 0, last: 1, step: 1 / duration_in_ms / fps}
+    %__MODULE__{first: 0, last: 1, step: (@one_second / fps) / duration_in_ms}
   end
   def calculate(duration_in_ms, fps) do
     raise ArgumentError, "Easing.AnimationRange.calculate/2 can only accept values in Integer form " <>
@@ -49,7 +51,7 @@ defmodule Easing.AnimationRange do
 
   ## Examples:
       iex> Easing.AnimationRange.calculate(1000, 60) |> Easing.AnimationRange.size()
-      60_001
+      61
   """
   def size(%{__struct__: __MODULE__, first: first, last: last, step: step}) do
     (abs(:erlang./(last - first, step)) |> Kernel.trunc()) + 1

@@ -1,5 +1,9 @@
 # Version History
 
+## 0.2.1
+
+Bad release for 0.2.0, didn't actually include the stated changed.
+
 ## 0.2.0
 
 Implemented reverse range support for `%Easing.AnimationRange`

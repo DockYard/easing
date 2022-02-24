@@ -1,5 +1,10 @@
 # Version History
 
+## 0.2.0
+
+Implemented reverse range support for `%Easing.AnimationRange`
+Fixed impossible range bug (no impossible ranges, always returns empty list)
+
 ## 0.1.3
 
 Bug fix: corrected `Easing.AnimationRange.calculate/2` to properly segment based upon frames within the framerate over the given duration

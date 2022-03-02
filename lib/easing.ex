@@ -13,7 +13,6 @@ defmodule Easing do
   @type easing_function_or_tuple :: easing_function() | easing_tuple()
   @type easings :: [float()]
 
-
   @spec to_list(animation_range(), easing_function_or_tuple()) :: easings()
   @doc """
   Generates a list of animation frame values.
@@ -48,9 +47,11 @@ defmodule Easing do
       [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 
   """
-  def stream(%AnimationRange{} = animation_range, easing_function) when is_function(easing_function) do
+  def stream(%AnimationRange{} = animation_range, easing_function)
+      when is_function(easing_function) do
     Stream.map(animation_range, &easing_function.(&1))
   end
+
   def stream(%AnimationRange{} = animation_range, easing_tuple) when is_tuple(easing_tuple) do
     Stream.map(animation_range, &run(easing_tuple, &1))
   end
@@ -66,7 +67,7 @@ defmodule Easing do
   """
   def linear_in(progress), do: run({:linear, :in}, progress)
 
-  @spec linear_out(float()) ::float()
+  @spec linear_out(float()) :: float()
   @doc """
   Linear out easing function
 
@@ -504,11 +505,11 @@ defmodule Easing do
   # Sine
 
   defp do_run({:sine, :in}, progress) do
-    1 - :math.cos((progress * :math.pi()) / 2)
+    1 - :math.cos(progress * :math.pi() / 2)
   end
 
   defp do_run({:sine, :out}, progress) do
-    :math.sin((progress * :math.pi()) / 2)
+    :math.sin(progress * :math.pi() / 2)
   end
 
   defp do_run({:sine, :in_out}, progress) do
@@ -643,7 +644,7 @@ defmodule Easing do
     c2 = c1 * 1.525
 
     if progress < 0.5 do
-      (:math.pow(2 * progress, 2) * ((c2 + 1) * 2 * progress - c2)) /2
+      :math.pow(2 * progress, 2) * ((c2 + 1) * 2 * progress - c2) / 2
     else
       (:math.pow(2 * progress - 2, 2) * ((c2 + 1) * (progress * 2 - 2) + c2) + 2) / 2
     end
@@ -652,23 +653,26 @@ defmodule Easing do
   # Elastic
 
   defp do_run({:elastic, :in}, progress) do
-    c4 = (2 * :math.pi()) / 3
+    c4 = 2 * :math.pi() / 3
 
     -1 * :math.pow(2, 10 * progress - 10) * :math.sin((progress * 10 - 10.75) * c4)
   end
 
   defp do_run({:elastic, :out}, progress) do
-    c4 = (2 * :math.pi()) / 3;
+    c4 = 2 * :math.pi() / 3
 
     :math.pow(2, -10 * progress) * :math.sin((progress * 10 - 0.75) * c4) + 1
   end
 
   defp do_run({:elastic, :in_out}, progress) do
-    c5 = (2 * :math.pi()) / 4.5
+    c5 = 2 * :math.pi() / 4.5
 
     cond do
-      progress < 0.5 -> -1 * (:math.pow(2, 20 * progress - 10) * :math.sin((20 * progress - 11.125) * c5)) / 2
-      true -> (:math.pow(2, -20 * progress + 10) * :math.sin((20 * progress - 11.125) * c5)) / 2 + 1
+      progress < 0.5 ->
+        -1 * (:math.pow(2, 20 * progress - 10) * :math.sin((20 * progress - 11.125) * c5)) / 2
+
+      true ->
+        :math.pow(2, -20 * progress + 10) * :math.sin((20 * progress - 11.125) * c5) / 2 + 1
     end
   end
 
@@ -683,13 +687,17 @@ defmodule Easing do
     d1 = 2.75
 
     cond do
-      progress < 1 / d1 -> n1 * :math.pow(progress, 2)
+      progress < 1 / d1 ->
+        n1 * :math.pow(progress, 2)
+
       progress < 2 / d1 ->
         p1 = progress - 1.5 / d1
         n1 * :math.pow(p1, 2) + 0.75
+
       progress < 2.5 / d1 ->
         p2 = progress - 2.25 / d1
         n1 * :math.pow(p2, 2) + 0.9375
+
       true ->
         p3 = progress - 2.625 / d1
         n1 * :math.pow(p3, 2) + 0.984375

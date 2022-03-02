@@ -35,11 +35,13 @@ defmodule Easing.AnimationRange do
       %Easing.AnimationRange{first: 0, last: 1, step: 1.0}
   """
   def calculate(duration_in_ms, fps) when is_integer(duration_in_ms) and is_integer(fps) do
-    %__MODULE__{first: 0, last: 1, step: (@one_second / fps) / duration_in_ms}
+    %__MODULE__{first: 0, last: 1, step: @one_second / fps / duration_in_ms}
   end
+
   def calculate(duration_in_ms, fps) do
-    raise ArgumentError, "Easing.AnimationRange.calculate/2 can only accept values in Integer form " <>
-      "got: (#{duration_in_ms}, #{fps})"
+    raise ArgumentError,
+          "Easing.AnimationRange.calculate/2 can only accept values in Integer form " <>
+            "got: (#{duration_in_ms}, #{fps})"
   end
 
   @spec size(animation_range()) :: integer()
@@ -57,9 +59,12 @@ defmodule Easing.AnimationRange do
     (abs(:erlang./(last - first, step)) |> Kernel.trunc()) + 1
   end
 
-
   defimpl Enumerable, for: Easing.AnimationRange do
-    def reduce(%{__struct__: Easing.AnimationRange, first: first, last: last, step: step}, acc, fun) do
+    def reduce(
+          %{__struct__: Easing.AnimationRange, first: first, last: last, step: step},
+          acc,
+          fun
+        ) do
       reduce(first, last, acc, fun, step)
     end
 
@@ -75,16 +80,22 @@ defmodule Easing.AnimationRange do
     defp reduce(first, last, {:cont, acc}, fun, step) do
       cond do
         (step > 0 and first > last) or (step < 0 and first < last) ->
-          {:don, acc}
-        (step > 0 and Float.ceil(first + 0.0, 10) >= last) or (step < 0 and Float.ceil(first + 0.0, 10) <= last) ->
+          {:done, acc}
+
+        (step > 0 and Float.ceil(first + 0.0, 10) >= last) or
+            (step < 0 and Float.ceil(first + 0.0, 10) <= last) ->
           {_, acc} = fun.(last, acc)
           {:done, acc}
+
         true ->
           reduce(first + step, last, fun.(first, acc), fun, step)
       end
     end
 
-    def member?(%{__struct__: Easing.AnimationRange, first: first, last: last, step: step} = range, value) do
+    def member?(
+          %{__struct__: Easing.AnimationRange, first: first, last: last, step: step} = range,
+          value
+        ) do
       cond do
         Easing.AnimationRange.size(range) == 0 ->
           {:ok, false}
@@ -106,6 +117,8 @@ defmodule Easing.AnimationRange do
     end
 
     defp slice(current, _step, 1), do: [current]
-    defp slice(current, step, remaining), do: [current | slice(current + step, step, remaining - 1)]
+
+    defp slice(current, step, remaining),
+      do: [current | slice(current + step, step, remaining - 1)]
   end
 end

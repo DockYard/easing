@@ -37,8 +37,7 @@ defmodule Easing.MixProject do
       maintainers: ["Brian Cardarella"],
       licenses: ["MIT"],
       links: %{"GitHub" => @scm_url},
-      files:
-        ~w(lib CHANGELOG.md LICENSE.md mix.exs README.md .formatter.exs)
+      files: ~w(lib CHANGELOG.md LICENSE.md mix.exs README.md .formatter.exs)
     ]
   end
 

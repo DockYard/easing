@@ -7,7 +7,7 @@ defmodule Easing.Range do
   """
   defstruct first: nil, last: nil, step: nil
 
-  @one_second 1000
+  @one_second 1_000
 
   @type range :: %Easing.Range{first: number(), last: number(), step: number()}
 

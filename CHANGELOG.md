@@ -1,5 +1,8 @@
 # Version History
 
+## 0.3.1
+
+Bug fix for Enumberable impl on `Easing.Range`
 ## 0.3.0
 
 Rename `Easing.AnimationRange` to `Easing.Range`

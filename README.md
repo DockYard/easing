@@ -34,7 +34,7 @@ by adding `ease` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:easing, "~> 0.3.0"}
+    {:easing, "~> 0.3.1"}
   ]
 end
 ```

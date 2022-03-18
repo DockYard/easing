@@ -1,6 +1,6 @@
-defmodule Easing.AnimationRange do
+defmodule Easing.Range do
   @moduledoc """
-  Animation range struct for Easing
+  Range struct for Easing
 
   This struct is basically a reimplementation of Elixir's `Range` struct
   but removing the limitations on only working with `Integer` constraints and steps
@@ -9,48 +9,48 @@ defmodule Easing.AnimationRange do
 
   @one_second 1000
 
-  @type animation_range :: %Easing.AnimationRange{first: number(), last: number(), step: number()}
+  @type range :: %Easing.Range{first: number(), last: number(), step: number()}
 
-  @spec new(number(), number(), number()) :: animation_range()
+  @spec new(number(), number(), number()) :: range()
   @doc """
-  Convenience function for creating a new `Easing.AnimationRange` struct
+  Convenience function for creating a new `Easing.Range` struct
 
-  * first: represents the starting % of the animation range. Value should be: `value >= 0 and < 1`
-  * last: represents the ending % of the animation range. Value should be: `value > 0 and <= 1`
+  * first: represents the starting % of the range. Value should be: `value >= 0 and < 1`
+  * last: represents the ending % of the range. Value should be: `value > 0 and <= 1`
   * step: value representing what the incremental value is between `first` and `last`. Can represent
   """
   def new(first, last, step) do
     %__MODULE__{first: first, last: last, step: step}
   end
 
-  @spec calculate(integer(), integer()) :: animation_range()
+  @spec calculate(integer(), integer()) :: range()
   @doc """
-  Creates a new `Easing.AnimationRange` struct from a desires animation duration and target fps
+  Creates a new `Easing.Range` struct from a desired  duration and target fps
 
   * duration_in_ms - total duration of the animation, only accepts `Integer`
   * fps - target frames per second of the animation, only accepts `Integer`
 
   ## Examples:
-      iex> Easing.AnimationRange.calculate(1000, 1)
-      %Easing.AnimationRange{first: 0, last: 1, step: 1.0}
+      iex> Easing.Range.calculate(1000, 1)
+      %Easing.Range{first: 0, last: 1, step: 1.0}
   """
   def calculate(duration_in_ms, fps) when is_integer(duration_in_ms) and is_integer(fps) do
     %__MODULE__{first: 0, last: 1, step: (@one_second / fps) / duration_in_ms}
   end
   def calculate(duration_in_ms, fps) do
-    raise ArgumentError, "Easing.AnimationRange.calculate/2 can only accept values in Integer form " <>
+    raise ArgumentError, "Easing.Range.calculate/2 can only accept values in Integer form " <>
       "got: (#{duration_in_ms}, #{fps})"
   end
 
-  @spec size(animation_range()) :: integer()
+  @spec size(range()) :: integer()
   @doc """
-  Returns the size of the `Easing.AnimationRange`
+  Returns the size of the `Easing.Range`
 
   Sizes are *inclusive* across a range. So a range from `0` - `1` with a step of `0.1` will have
   `11` values, not `10` because the `0` value is included in that result.
 
   ## Examples:
-      iex> Easing.AnimationRange.calculate(1000, 60) |> Easing.AnimationRange.size()
+      iex> Easing.Range.calculate(1000, 60) |> Easing.Range.size()
       61
   """
   def size(%{__struct__: __MODULE__, first: first, last: last, step: step}) do
@@ -58,8 +58,8 @@ defmodule Easing.AnimationRange do
   end
 
 
-  defimpl Enumerable, for: Easing.AnimationRange do
-    def reduce(%{__struct__: Easing.AnimationRange, first: first, last: last, step: step}, acc, fun) do
+  defimpl Enumerable, for: Easing.Range do
+    def reduce(%{__struct__: Easing.Range, first: first, last: last, step: step}, acc, fun) do
       reduce(first, last, acc, fun, step)
     end
 
@@ -84,9 +84,9 @@ defmodule Easing.AnimationRange do
       end
     end
 
-    def member?(%{__struct__: Easing.AnimationRange, first: first, last: last, step: step} = range, value) do
+    def member?(%{__struct__: Easing.Range, first: first, last: last, step: step} = range, value) do
       cond do
-        Easing.AnimationRange.size(range) == 0 ->
+        Easing.Range.size(range) == 0 ->
           {:ok, false}
 
         first <= last ->
@@ -98,11 +98,11 @@ defmodule Easing.AnimationRange do
     end
 
     def count(range) do
-      {:ok, Easing.AnimationRange.size(range)}
+      {:ok, Easing.Range.size(range)}
     end
 
-    def slice(%{__struct__: Easing.AnimationRange, first: first, step: step} = range) do
-      {:ok, Easing.AnimationRange.size(range), &slice(first + &1 * step, step, &2)}
+    def slice(%{__struct__: Easing.Range, first: first, step: step} = range) do
+      {:ok, Easing.Range.size(range), &slice(first + &1 * step, step, &2)}
     end
 
     defp slice(current, _step, 1), do: [current]

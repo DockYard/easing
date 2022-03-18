@@ -5,54 +5,54 @@ defmodule Easing do
   Cribbed from: https://easings.net/
   """
 
-  alias Easing.AnimationRange
+  alias Easing.Range
 
   @type easing_tuple :: {atom(), atom()}
-  @type animation_range :: %Easing.AnimationRange{first: number(), last: number(), step: number()}
+  @type range :: %Easing.Range{first: number(), last: number(), step: number()}
   @type easing_function :: function()
   @type easing_function_or_tuple :: easing_function() | easing_tuple()
   @type easings :: [float()]
 
 
-  @spec to_list(animation_range(), easing_function_or_tuple()) :: easings()
+  @spec to_list(range(), easing_function_or_tuple()) :: easings()
   @doc """
   Generates a list of animation frame values.
 
-  A `Range` is used for the `animation_range` argument. See the example
+  A `Range` is used for the `range` argument. See the example
 
   ## Examples:
 
-      iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1))
+      iex> Easing.to_list(%Easing.Range{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1))
       [0.0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 1.0]
 
-      iex> Easing.to_list(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out})
+      iex> Easing.to_list(%Easing.Range{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out})
       [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
   """
-  def to_list(%AnimationRange{} = animation_range, easing) do
-    animation_range
+  def to_list(%Range{} = range, easing) do
+    range
     |> stream(easing)
     |> Enum.to_list()
   end
 
-  @spec stream(animation_range(), easing_function_or_tuple()) :: Enumerable.t()
+  @spec stream(range(), easing_function_or_tuple()) :: Enumerable.t()
   @doc """
   Generates a stream of animation frame values.
 
-  A `Range` is used for the `animation_range` argument. See the example
+  A `Range` is used for the `range` argument. See the example
 
   ## Examples:
-      iex> Easing.stream(%Easing.AnimationRange{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1)) |> Enum.to_list()
+      iex> Easing.stream(%Easing.Range{first: 0, last: 1, step: 0.1}, &Easing.sine_in(&1)) |> Enum.to_list()
       [0.0, 0.01231165940486223, 0.04894348370484647, 0.10899347581163221, 0.19098300562505255, 0.2928932188134524, 0.41221474770752675, 0.5460095002604533, 0.6909830056250525, 0.8435655349597688, 1.0]
 
-      iex> Easing.stream(%Easing.AnimationRange{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out}) |> Enum.to_list()
+      iex> Easing.stream(%Easing.Range{first: 0, last: 0.5, step: 0.1}, {:bounce, :in_out}) |> Enum.to_list()
       [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 
   """
-  def stream(%AnimationRange{} = animation_range, easing_function) when is_function(easing_function) do
-    Stream.map(animation_range, &easing_function.(&1))
+  def stream(%Range{} = range, easing_function) when is_function(easing_function) do
+    Stream.map(range, &easing_function.(&1))
   end
-  def stream(%AnimationRange{} = animation_range, easing_tuple) when is_tuple(easing_tuple) do
-    Stream.map(animation_range, &run(easing_tuple, &1))
+  def stream(%Range{} = range, easing_tuple) when is_tuple(easing_tuple) do
+    Stream.map(range, &run(easing_tuple, &1))
   end
 
   @spec linear_in(float()) :: float()

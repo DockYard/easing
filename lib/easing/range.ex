@@ -75,7 +75,7 @@ defmodule Easing.Range do
     defp reduce(first, last, {:cont, acc}, fun, step) do
       cond do
         (step > 0 and first > last) or (step < 0 and first < last) ->
-          {:don, acc}
+          {:done, acc}
         (step > 0 and Float.ceil(first + 0.0, 10) >= last) or (step < 0 and Float.ceil(first + 0.0, 10) <= last) ->
           {_, acc} = fun.(last, acc)
           {:done, acc}

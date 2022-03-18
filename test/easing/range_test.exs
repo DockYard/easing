@@ -1,10 +1,9 @@
 defmodule Easing.RangeTest do
   use ExUnit.Case
   doctest Easing.Range
-  alias Easing.Range
 
   test "animation range produces full range of values" do
-    range = %Range{first: 0, last: 1, step: 0.1}
+    range = %Easing.Range{first: 0, last: 1, step: 0.1}
 
     list = Enum.to_list(range)
 
@@ -14,7 +13,7 @@ defmodule Easing.RangeTest do
   end
 
   test "reverse ranges work with negative steps" do
-    range = %Range{first: 10, last: 0, step: -1}
+    range = %Easing.Range{first: 10, last: 0, step: -1}
 
     list = Enum.to_list(range)
 
@@ -22,16 +21,27 @@ defmodule Easing.RangeTest do
   end
 
   test "impossible ranges result in empty lists" do
-    range = %Range{first: 1, last: 0, step: 1}
+    range = %Easing.Range{first: 1, last: 0, step: 1}
 
     list = Enum.to_list(range)
 
     assert list == []
 
-    range = %Range{first: 0, last: 1, step: -1}
+    range = %Easing.Range{first: 0, last: 1, step: -1}
 
     list = Enum.to_list(range)
 
     assert list == []
+  end
+
+  test "range can safely expand impossible ranges" do
+    range = %Easing.Range{first: 0, last: 5, step: -1}
+
+    result =
+      range
+      |> Stream.map(&(&1*2))
+      |> Enum.to_list()
+
+    assert result == []
   end
 end

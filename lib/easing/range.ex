@@ -71,19 +71,26 @@ defmodule Easing.Range do
       {:suspended, acc, &reduce(first, last, &1, fun, step)}
     end
 
-    # todo: this is probably shit performance
     defp reduce(first, last, {:cont, acc}, fun, step) do
       cond do
         (step > 0 and first > last) or (step < 0 and first < last) ->
-          {:done, acc}
-        (step > 0 and Float.ceil(first + 0.0, 10) >= last) or (step < 0 and Float.ceil(first + 0.0, 10) <= last) ->
-          {_, acc} = fun.(last, acc)
-          {:done, acc}
+          acc = case acc do
+            [[]] = acc ->  acc
+            [] = acc -> acc
+            _ -> fun.(last, acc) |> elem(1)
+          end
+
+          {:done, dedup_last(acc)}
         true ->
           reduce(first + step, last, fun.(first, acc), fun, step)
       end
     end
 
+    defp dedup_last([acc]) when is_list(acc), do: [dedup_last(acc)]
+    defp dedup_last([last, last | acc]), do: [last | acc]
+    defp dedup_last(acc), do: acc
+
+    @spec member?(%Easing.Range{}, any) :: {:ok, boolean}
     def member?(%{__struct__: Easing.Range, first: first, last: last, step: step} = range, value) do
       cond do
         Easing.Range.size(range) == 0 ->

@@ -7,9 +7,15 @@ defmodule Easing.RangeTest do
 
     list = Enum.to_list(range)
 
-    assert length(list) == 11
+    assert length(list) == 12
     assert Enum.at(list, 0) == 0.0
     assert Enum.at(list, length(list) - 1) == 1.0
+
+    range = %Easing.Range{first: 0, last: 10, step: 3}
+
+    list = Enum.to_list(range)
+
+    assert list == [0, 3, 6, 9, 10]
   end
 
   test "reverse ranges work with negative steps" do

@@ -10,7 +10,7 @@ This library implements all of the easing functions as provided on https://easin
 
 ## Description
 
-Calculates the easing value of a given function and progress of an animation represented by a range between `0..1`. The following easings are availalbe with _in_, _out_, and _in\_out_ varients:
+Calculates the easing value of a given function and progress of an timing represented by a range between `0..1`. The following easings are availalbe with _in_, _out_, and _in\_out_ varients:
 
 Note: If you'd like to see visualizations of the easing calculations visit https://easings.net
 
@@ -43,16 +43,16 @@ end
 
 ### Calculating a single point
 
-You can calculate a single point for a function along the progress of an animation:
+You can calculate a single point for a function along the progress of a timing:
 
 ```elixir
 iex> Easing.sine_in(0.4)
 0.19098300562505255
 ```
 
-### Calculating a list of animation frame values
+### Calculating a list of timing frame values
 
-However you likely want to calculate the list of values for a given animation. `Easing.to_list/2` will take a `Easing.Range` struct and the easing as either a function reference or a tuple.
+However you likely want to calculate the list of values for a given timing. `Easing.to_list/2` will take a `Easing.Range` struct and the easing as either a function reference or a tuple.
 
 ```elixir
 iex> Easing.to_list(%Easing.Range{first: 0, last: 0.5, step: 0.1}, &Easing.bounce_in_out(&1))
@@ -61,9 +61,9 @@ iex> Easing.to_list(%Easing.Range{first: 0, last: 0.5, step: 0.1}, {:bounce, :in
 [0.0, 0.030000000000000027, 0.11375000000000002, 0.04499999999999993, 0.3487500000000001, 0.5]
 ```
 
-### Calculating animation frames from a Stream
+### Calculating timing frames from a Stream
 
-In many cases you will generate many animation frame values and it may be most performant to calculate those values lazily. We can easily do this with [Elixir Streams](https://elixir-lang.org/getting-started/enumerables-and-streams.html#streams)
+In many cases you will generate many timing frame values and it may be most performant to calculate those values lazily. We can easily do this with [Elixir Streams](https://elixir-lang.org/getting-started/enumerables-and-streams.html#streams)
 
 ```elixir
 iex> Easing.stream(%Easing.Range{first: 0, last: 1, step: 0.0001}, &Easing.sine_in/1) |> Enum.take(3)
